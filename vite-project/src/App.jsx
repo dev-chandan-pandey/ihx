@@ -1,19 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-/*
+import './App.css';
 
-
-Create a full-stack application using Node.js with Express for the backend and React for the frontend. The application should:
-
-Have an Express API with an endpoint that accepts a username or email.
-Use this input to find the corresponding user from JSONPlaceholder API.
-Calculate the average word count of the user's posts.
-Return this information to the frontend.
-Have a React frontend with an input field for username/email and a button to submit.
-Display the result (average word count) on FE
-Fetch the list of users from 'https://jsonplaceholder.typicode.com/users'
-For each user, fetch their posts from 'https://jsonplaceholder.typicode.com/users/{userId}/posts'
-*/
 function App() {
     const [input, setInput] = useState('');
     const [averageWordCount, setAverageWordCount] = useState(null);
@@ -21,6 +9,12 @@ function App() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!input.trim()) {
+            setError('Please enter a valid username or email.');
+            return;
+        }
+
         try {
             setError('');
             const response = await axios.get('http://localhost:5000/api/user-posts', {
@@ -31,29 +25,30 @@ function App() {
             });
             setAverageWordCount(response.data.averageWordCount);
         } catch (err) {
-            setError('User not found or an error occurred');
+            setError('User not found or an error occurred. Please try again.');
             setAverageWordCount(null);
         }
     };
 
     return (
-        <div className="App">
+        <div className="app-container">
             <h1>Average Word Count of User's Posts</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="form-container">
                 <input
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Enter username or email"
+                    className="input-field"
                 />
-                <button type="submit">Submit</button>
+                <button type="submit" className="submit-button">Submit</button>
             </form>
             {averageWordCount !== null && (
-                <div>
-                    <h2>Average Word Count: {averageWordCount}</h2>
+                <div className="result-container">
+                    <h2>Average Word Count: {averageWordCount.toFixed(2)}</h2>
                 </div>
             )}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p className="error-message">{error}</p>}
         </div>
     );
 }
