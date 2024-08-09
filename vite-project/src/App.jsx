@@ -17,7 +17,7 @@ function App() {
 
         try {
             setError('');
-            const response = await axios.get('http://localhost:5000/api/user-posts', {
+            const response = await axios.get('https://ihx.onrender.com/api/user-posts', {
                 params: {
                     username: input,
                     email: input,
